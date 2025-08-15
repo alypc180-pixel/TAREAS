@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /roles/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null
+        && get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.role == "admin";
+    }
+    match /tasks/{taskId} {
+      allow create: if request.auth != null
+        && (get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.role in ["admin","contributor"])
+        && request.resource.data.owner == request.auth.uid;
+      allow read: if request.auth != null
+        && (get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.role == "admin"
+            || (get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.role == "contributor"
+                && resource.data.owner == request.auth.uid));
+      allow update, delete: if request.auth != null
+        && get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.role == "admin";
+    }
+  }
+}

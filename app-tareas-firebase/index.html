@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Control de Tareas — GPS, Fotos y Excel</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hdr">
+    <div class="wrap">
+      <h1>🗂️ Control de Tareas <span class="muted">— GPS, fotos y Excel</span></h1>
+      <div class="userbox" id="userBox"></div>
+    </div>
+  </header>
+
+  <main class="wrap grid">
+    <!-- Autenticación -->
+    <section class="card" id="authCard">
+      <h2>Acceso</h2>
+      <p class="muted small">Solo usuarios autorizados. El admin aprueba y asigna roles.</p>
+      <div class="auth two">
+        <div>
+          <h3>Ingresar</h3>
+          <label>Email<input type="email" id="loginEmail" placeholder="usuario@correo.com"></label>
+          <label>Contraseña<input type="password" id="loginPass" placeholder="********"></label>
+          <div class="toolbar">
+            <button id="btnLogin">Entrar</button>
+            <button class="secondary" id="btnLogout" disabled>Salir</button>
+          </div>
+        </div>
+        <div>
+          <h3>Registrarse</h3>
+          <label>Email<input type="email" id="regEmail" placeholder="nuevo@correo.com"></label>
+          <label>Contraseña<input type="password" id="regPass" placeholder="Mínimo 6 caracteres"></label>
+          <button id="btnRegister">Crear cuenta</button>
+          <p class="muted small">Tras registrarte, el admin debe aprobarte con el rol <b>contributor</b>.</p>
+        </div>
+      </div>
+      <div id="whoami" class="muted small"></div>
+    </section>
+
+    <!-- Formulario -->
+    <section class="card" id="formCard">
+      <h2>Nueva tarea</h2>
+      <label>Título / Nombre<input id="tTitle" placeholder="Ej: Inspección poste #14" /></label>
+      <label>Número de tarea<input id="tNumber" type="number" placeholder="Ej: 14" /></label>
+      <label>Observaciones / Deficiencias<textarea id="tNotes" placeholder="Describe lo observado en el punto"></textarea></label>
+
+      <div class="toolbar">
+        <button id="btnLoc">📍 Obtener ubicación</button>
+        <button class="secondary" id="btnClearLoc">Limpiar ubicación</button>
+      </div>
+      <div id="locInfo" class="muted small"></div>
+      <div id="mapPreview" class="map hidden"></div>
+
+      <label>Foto (opcional)<input type="file" id="tPhoto" accept="image/*" capture="environment" /></label>
+      <img id="previewImg" class="photo hidden" />
+
+      <div class="toolbar">
+        <button id="btnSave" class="success">💾 Guardar tarea</button>
+        <span id="saveMsg" class="muted"></span>
+      </div>
+    </section>
+
+    <!-- Listado y exportación -->
+    <section class="card">
+      <div class="headrow">
+        <h2>Tareas</h2>
+        <div class="toolbar">
+          <button id="btnRefresh" class="secondary">Actualizar</button>
+          <button id="btnExport">⬇️ Exportar Excel</button>
+        </div>
+      </div>
+      <p class="muted small" id="scope"></p>
+      <div id="taskList" class="list"></div>
+    </section>
+  </main>
+
+  <!-- Firebase SDKs (compat para simplificar) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
+  <!-- Leaflet -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- SheetJS -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
